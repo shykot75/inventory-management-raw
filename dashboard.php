@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // If not logged in, redirect to login page
+    header('Location: login.php');
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-mode="light">
 <head>
@@ -7,18 +19,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="../../assets/css/main.css">
-    <style>
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-
-    </style>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style></style>
 </head>
 <body class="w-full bg-body-light text-light dark:bg-dark dark:text-dark">
 
@@ -52,7 +54,7 @@
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                 <span class="absolute -inset-1.5"></span>
                                 <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full" src="../../assets/images/profile.png" alt="">
+                                <img class="h-8 w-8 rounded-full" src="assets/images/profile.png" alt="">
                             </button>
                         </div>
 
@@ -72,7 +74,7 @@
                                 </div>
                             </a>
 
-                            <a href="../../logout.php"
+                            <a href="logout.php"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</a>
                         </div>
                     </div>
@@ -91,7 +93,7 @@
             <ul class="space-y-2 w-full px-2 mt-2">
 
                 <li class="relative menu-item">
-                    <a href="" class="parent-item active flex items-center w-full px-3 py-3">
+                    <a href="dashboard.php" class="parent-item active flex items-center w-full px-3 py-3">
                         <i class="fa-solid fa-house text-sm "></i>
                         <span class="menu-title ml-4 text-sm font-medium">Dashboard</span>
                     </a>
@@ -106,13 +108,13 @@
                     </div>
                     <ul class="dropdown-menu bg-white text-light dark:bg-dark dark:text-dark ml-2">
                         <li class="dropdown-item">
-                            <a href="#" class="flex items-center flex-row w-full px-3 py-2.5 ">
+                            <a href="product-list.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
                                 <i class="fa-solid fa-chevron-right"></i>
                                 <span class="ml-4 text-sm font-medium">Product List</span>
                             </a>
                         </li>
                         <li class="dropdown-item">
-                            <a href="../product/create-product.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
+                            <a href="create-product.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
                                 <i class="fa-solid fa-chevron-right"></i>
                                 <span class="ml-4 text-sm font-medium">Add Product</span>
                             </a>
@@ -132,11 +134,24 @@
 
         <?php
         // Replace this with your PHP login alert logic
-        include('../../components/login-alert-message.php');
+        include('components/login-alert-message.php');
         ?>
 
         <div class="main-body">
-
+            <div class="card">
+                <div class="card-header rounded-t-md">
+                    <div class="flex justify-between items-center gap-x-4">
+                        <h6 class="text-lg card-title">
+                            Admin Dashboard
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-slate-500 dark:text-zink-200 text-center text-2xl py-6">
+                        Welcome to Inventory Management System
+                    </p>
+                </div>
+            </div>
         </div>
     </main>
     <!-- Main Content End -->
@@ -146,7 +161,7 @@
 <!-- Overlay -->
 <div id="overlay" class="fixed inset-0 bg-black opacity-50 hidden ease-in-out transition-all duration-500"></div>
 
-<script type="module" src="../../assets/js/bcs-util.js"></script>
-<script type="module" src="../../assets/js/main.js"></script>
+<script type="module" src="assets/js/bcs-util.js"></script>
+<script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
