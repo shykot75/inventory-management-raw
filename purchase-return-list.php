@@ -3,24 +3,54 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // If not logged in, redirect to login page
     header('Location: login.php');
     exit();
 }
-?>
 
+include 'config.php';  // Include the database connection
+
+// Fetch all purchase returns from the database
+function getPurchaseReturns($connection) {
+    $query = "SELECT pr.purchase_return_id, pr.return_date, pr.return_quantity, pr.return_amount, 
+                     pr.payment_status, prod.product_name, prod.product_price, prod.quantity as current_stock
+              FROM purchase_returns pr
+              JOIN products prod ON pr.product_id = prod.product_id
+              WHERE pr.deleted_at IS NULL
+              ORDER BY pr.return_date DESC";
+
+    $result = mysqli_query($connection, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return [];
+}
+
+$purchaseReturns = getPurchaseReturns($connection);
+?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-mode="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Admin | IMS</title>
+    <title>Purchase Return List | IMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="assets/css/main.css">
-    <style></style>
+    <style>
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+    </style>
 </head>
 <body class="w-full bg-body-light text-light dark:bg-dark dark:text-dark">
 
@@ -124,74 +154,6 @@ if (!isset($_SESSION['user_id'])) {
                 </li>
                 <!-- Profile Dropdown End -->
 
-                <!-- Purchase Dropdown Start -->
-                <li class="relative menu-item">
-                    <div class="parent-item flex items-center flex-row w-full px-3 py-3 cursor-pointer">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium grow">Purchase</span>
-                        <i class="fa-solid fa-angle-down arrow-icon"></i>
-                    </div>
-                    <ul class="dropdown-menu bg-white text-light dark:bg-dark dark:text-dark ml-2">
-                        <li class="dropdown-item">
-                            <a href="purchase-list.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Purchase List</span>
-                            </a>
-                        </li>
-                        <li class="dropdown-item">
-                            <a href="purchase-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Create Purchase</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                <!-- Purchase Dropdown End -->
-
-                <!-- Purchase Return Dropdown Start -->
-                <li class="relative menu-item">
-                    <a href="purchase-return-list.php" class="parent-item flex items-center w-full px-3 py-3">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium">Purchase Return</span>
-                    </a>
-                </li>
-                <!-- Purchase Return Dropdown End -->
-
-                <!-- Sales Dropdown Start -->
-                <li class="relative menu-item">
-                    <div class="parent-item flex items-center flex-row w-full px-3 py-3 cursor-pointer">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium grow">Sales</span>
-                        <i class="fa-solid fa-angle-down arrow-icon"></i>
-                    </div>
-                    <ul class="dropdown-menu bg-white text-light dark:bg-dark dark:text-dark ml-2">
-                        <li class="dropdown-item">
-                            <a href="sales-list.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Sales List</span>
-                            </a>
-                        </li>
-                        <li class="dropdown-item">
-                            <a href="sales-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Create Sales</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                <!-- Sales Dropdown End -->
-
-                <!-- Sales Return Dropdown Start -->
-                <li class="relative menu-item">
-                    <a href="sales-return-list.php" class="parent-item flex items-center w-full px-3 py-3">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium">Sales Return</span>
-                    </a>
-                </li>
-                <!-- Sales Return Dropdown End -->
-
             </ul>
         </div>
     </aside>
@@ -207,17 +169,67 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="main-body">
             <div class="card">
-                <div class="card-header rounded-t-md">
-                    <div class="flex justify-between items-center gap-x-4">
-                        <h6 class="text-lg card-title">
-                            Admin Dashboard
-                        </h6>
-                    </div>
-                </div>
+
                 <div class="card-body">
-                    <p class="text-slate-500 dark:text-zink-200 text-center text-2xl py-6">
-                        Welcome to Inventory Management System
-                    </p>
+                    <h6 class="mb-4 text-15">Purchase Return Lists</h6>
+                    <table id="borderedTable" class="bordered group" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th>Return Qty.</th>
+                            <th>Grand Total</th>
+                            <th>Payment Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if (count($purchaseReturns) > 0): ?>
+                            <?php foreach ($purchaseReturns as $index => $item): ?>
+                                <tr class="text-sm text-center">
+                                    <td><?php echo $index + 1; ?></td>
+                                    <td><?php echo htmlspecialchars($item['return_date']) ?? '--'; ?></td>
+                                    <td>
+                                        <?php echo htmlspecialchars($item['product_name']) ?? '--'; ?> <br>
+                                        <small>Price: <?php echo htmlspecialchars($item['product_price']) ?? '--'; ?> Tk</small>
+                                        <small>CS: <?php echo htmlspecialchars($item['current_stock']) ?? '--'; ?></small>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($item['return_quantity']) ?? '--'; ?></td>
+                                    <td><?php echo htmlspecialchars($item['return_amount']) ?? '--'; ?> Tk</td>
+                                    <td>
+                                        <div class="<?php echo $item['payment_status'] == 'paid' ? 'badge-active' : 'badge-inactive'; ?> px-2.5 py-0.5 inline-block">
+                                            <?php echo $item['payment_status'] == 'paid' ? 'Paid' : 'Not Paid'; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex justify-center">
+                                            <div class="dropdown relative">
+                                                <button type="button"
+                                                        class="text-white dropdown-toggle btn bg-primary-500 border-primary-500 hover:text-white hover:bg-primary-600 focus:text-white focus:bg-primary-600"
+                                                        id="dropdownMenuheading">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="absolute z-50 py-2 mt-1 list-none bg-white rounded-md shadow-md dropdown-toggle-menu min-w-max">
+                                                    <li>
+                                                        <a class="block px-4 py-1.5 text-base font-medium text-slate-600 dropdown-item"
+                                                           href="purchase-return-pdf.php?purchase_return_id=<?php echo $item['purchase_return_id']; ?>">
+                                                            <i class="fa-solid fa-file-pdf mr-1"></i> Save Pdf
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="7" class="text-center">No Purchase Returns Found</td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -231,5 +243,23 @@ if (!isset($_SESSION['user_id'])) {
 
 <script type="module" src="assets/js/bcs-util.js"></script>
 <script type="module" src="assets/js/main.js"></script>
+
+
+<!--dataTables-->
+<script type="module" src="assets/libs/datatables/jquery-3.7.0.js"></script>
+<script type="module" src="assets/libs/datatables/data-tables.min.js"></script>
+<script type="module" src="assets/libs/datatables/data-tables.tailwindcss.min.js"></script>
+
+<script type="module" src="assets/js/datatable-util.js"></script>
+<script type="module" src="assets/js/datatables.js"></script>
+<script>
+    function confirmDelete(productId) {
+        if (confirm("Are you sure you want to delete this item?")) {
+            document.getElementById('delete-form-' + productId).submit();
+        }
+    }
+</script>
+
 </body>
 </html>
+

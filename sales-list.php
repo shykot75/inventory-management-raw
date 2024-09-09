@@ -3,24 +3,56 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // If not logged in, redirect to login page
     header('Location: login.php');
     exit();
 }
-?>
 
+include 'config.php';  // Include the database connection
+
+// Fetch all sales from the database
+function getSales($connection) {
+    $query = "SELECT s.sale_id, s.sale_date, s.sale_quantity, s.sale_total, s.payment_status, s.is_returned,
+                     prod.product_name, prod.product_price, prod.quantity as current_stock,
+                     cus.customer_name
+              FROM sales s
+              JOIN products prod ON s.product_id = prod.product_id
+              JOIN customers cus ON s.customer_id = cus.customer_id
+              WHERE s.deleted_at IS NULL
+              ORDER BY s.sale_date DESC";
+
+    $result = mysqli_query($connection, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return [];
+}
+
+$sales = getSales($connection);
+?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-mode="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Admin | IMS</title>
+    <title>Purhchase List | IMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="assets/css/main.css">
-    <style></style>
+    <style>
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+    </style>
 </head>
 <body class="w-full bg-body-light text-light dark:bg-dark dark:text-dark">
 
@@ -124,74 +156,6 @@ if (!isset($_SESSION['user_id'])) {
                 </li>
                 <!-- Profile Dropdown End -->
 
-                <!-- Purchase Dropdown Start -->
-                <li class="relative menu-item">
-                    <div class="parent-item flex items-center flex-row w-full px-3 py-3 cursor-pointer">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium grow">Purchase</span>
-                        <i class="fa-solid fa-angle-down arrow-icon"></i>
-                    </div>
-                    <ul class="dropdown-menu bg-white text-light dark:bg-dark dark:text-dark ml-2">
-                        <li class="dropdown-item">
-                            <a href="purchase-list.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Purchase List</span>
-                            </a>
-                        </li>
-                        <li class="dropdown-item">
-                            <a href="purchase-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Create Purchase</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                <!-- Purchase Dropdown End -->
-
-                <!-- Purchase Return Dropdown Start -->
-                <li class="relative menu-item">
-                    <a href="purchase-return-list.php" class="parent-item flex items-center w-full px-3 py-3">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium">Purchase Return</span>
-                    </a>
-                </li>
-                <!-- Purchase Return Dropdown End -->
-
-                <!-- Sales Dropdown Start -->
-                <li class="relative menu-item">
-                    <div class="parent-item flex items-center flex-row w-full px-3 py-3 cursor-pointer">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium grow">Sales</span>
-                        <i class="fa-solid fa-angle-down arrow-icon"></i>
-                    </div>
-                    <ul class="dropdown-menu bg-white text-light dark:bg-dark dark:text-dark ml-2">
-                        <li class="dropdown-item">
-                            <a href="sales-list.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Sales List</span>
-                            </a>
-                        </li>
-                        <li class="dropdown-item">
-                            <a href="sales-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
-                                <i class="fa-solid fa-chevron-right"></i>
-                                <span class="ml-4 text-sm font-medium">Create Sales</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                <!-- Sales Dropdown End -->
-
-                <!-- Sales Return Dropdown Start -->
-                <li class="relative menu-item">
-                    <a href="sales-return-list.php" class="parent-item flex items-center w-full px-3 py-3">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span class="menu-title ml-4 text-sm font-medium">Sales Return</span>
-                    </a>
-                </li>
-                <!-- Sales Return Dropdown End -->
-
             </ul>
         </div>
     </aside>
@@ -207,17 +171,75 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="main-body">
             <div class="card">
-                <div class="card-header rounded-t-md">
-                    <div class="flex justify-between items-center gap-x-4">
-                        <h6 class="text-lg card-title">
-                            Admin Dashboard
-                        </h6>
-                    </div>
-                </div>
                 <div class="card-body">
-                    <p class="text-slate-500 dark:text-zink-200 text-center text-2xl py-6">
-                        Welcome to Inventory Management System
-                    </p>
+                    <h6 class="mb-4 text-15">Sales List</h6>
+                    <!-- Add responsive table wrapper -->
+                    <div class="responsive-table">
+                        <table id="borderedTable" class="bordered group" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sales Date</th>
+                                <th>Product Name</th>
+                                <th>Customer</th>
+                                <th>Quantity</th>
+                                <th>Total (Tk)</th>
+                                <th>Payment</th>
+                                <th>Returned?</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php if (count($sales) > 0): ?>
+                                <?php foreach ($sales as $index => $sale): ?>
+                                    <tr class="text-center">
+                                        <td><?php echo $index + 1; ?></td>
+                                        <td><?php echo htmlspecialchars($sale['sale_date']); ?></td>
+                                        <td>
+                                            <?php echo htmlspecialchars($sale['product_name']); ?> <br>
+                                            <small>Price: <?php echo htmlspecialchars($sale['product_price']); ?> Tk.</small>
+                                            <small>CS: <?php echo htmlspecialchars($sale['current_stock']); ?></small>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($sale['customer_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($sale['sale_quantity']); ?></td>
+                                        <td><?php echo htmlspecialchars(number_format($sale['sale_total'], 2)); ?></td>
+                                        <td>
+                                            <div class="<?php echo $sale['payment_status'] === 'paid' ? 'badge-active' : 'badge-inactive'; ?>  px-2.5 py-0.5 inline-block">
+                                                <?php echo $sale['payment_status'] === 'paid' ? 'Paid' : 'Unpaid'; ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="<?php echo $sale['is_returned'] === '1' ? 'badge-block' : 'badge-pending'; ?>  px-2.5 py-0.5 inline-block">
+                                                <?php echo $sale['is_returned'] === '1' ? 'Yes' : 'No'; ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php if ($sale['is_returned'] == 1): ?>
+                                                <!-- If the sale is already returned, disable the return button -->
+                                                <span class="block px-4 py-1.5 text-base font-medium text-gray-400 cursor-not-allowed">
+                                                    <i class="fa-solid fa-ban mr-1"></i> Returned
+                                                </span>
+                                            <?php else: ?>
+                                                <!-- If the sale is not returned, show the return button -->
+                                                <a href="sales-return.php?sale_id=<?php echo $sale['sale_id']; ?>" class="block px-4 py-1.5 text-base font-medium text-slate-600">
+                                                    <i class="fa-solid fa-pen-to-square mr-1"></i> Return
+                                                </a>
+                                            <?php endif; ?>
+
+<!--                                            <a href="sale-pdf.php?sale_id=--><?php //echo $sale['sale_id']; ?><!--" class="block px-4 py-1.5 text-base font-medium text-slate-600">-->
+<!--                                                <i class="fa-solid fa-file-pdf mr-1"></i> Save as PDF-->
+<!--                                            </a>-->
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="9" class="text-center">No sales found</td>
+                                </tr>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,5 +253,17 @@ if (!isset($_SESSION['user_id'])) {
 
 <script type="module" src="assets/js/bcs-util.js"></script>
 <script type="module" src="assets/js/main.js"></script>
+
+
+<!--dataTables-->
+<script type="module" src="assets/libs/datatables/jquery-3.7.0.js"></script>
+<script type="module" src="assets/libs/datatables/data-tables.min.js"></script>
+<script type="module" src="assets/libs/datatables/data-tables.tailwindcss.min.js"></script>
+
+<script type="module" src="assets/js/datatable-util.js"></script>
+<script type="module" src="assets/js/datatables.js"></script>
+
+
 </body>
 </html>
+

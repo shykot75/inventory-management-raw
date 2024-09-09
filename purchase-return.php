@@ -40,7 +40,7 @@ if (isset($_POST['submit'])) {
     $payment_type = $_POST['payment_type'] ?? null;
     $payment_status = $_POST['payment_status'] ?? null;
     $return_reason = $_POST['return_reason'];
-    $product_id = $_POST['purchase_id'];
+    $purchase_id = $_POST['purchase_id'];
     $product_id = $_POST['product_id'];
 
     // Initialize errors array
@@ -82,7 +82,7 @@ if (isset($_POST['submit'])) {
         }
 
         // Redirect after form submission
-        header("Location: purchase-list.php");
+        header("Location: purchase-return-list.php");
         exit();
     } else {
         // Store errors and old input values in session
@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Purchase REturn | IMS</title>
+    <title>Purchase Return | IMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
