@@ -269,7 +269,7 @@ if (isset($_POST['submit'])) {
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="create-product.php" method="POST" enctype="multipart/form-data">
+                    <form action="product-create.php" method="POST" enctype="multipart/form-data">
                         <div class="grid xl:grid-cols-3 gap-x-4 my-2">
                             <div>
                                 <label for="product_name" class="form-input-label text-base font-medium required">Product Name</label>

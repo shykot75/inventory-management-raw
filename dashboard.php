@@ -114,7 +114,7 @@ if (!isset($_SESSION['user_id'])) {
                             </a>
                         </li>
                         <li class="dropdown-item">
-                            <a href="create-product.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
+                            <a href="product-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
                                 <i class="fa-solid fa-chevron-right"></i>
                                 <span class="ml-4 text-sm font-medium">Add Product</span>
                             </a>
@@ -123,6 +123,31 @@ if (!isset($_SESSION['user_id'])) {
                     </ul>
                 </li>
                 <!-- Profile Dropdown End -->
+
+                <!-- Purchase Dropdown Start -->
+                <li class="relative menu-item">
+                    <div class="parent-item flex items-center flex-row w-full px-3 py-3 cursor-pointer">
+                        <i class="fa-solid fa-cart-shopping text-sm"></i>
+                        <span class="menu-title ml-4 text-sm font-medium grow">Purchase</span>
+                        <i class="fa-solid fa-angle-down arrow-icon"></i>
+                    </div>
+                    <ul class="dropdown-menu bg-white text-light dark:bg-dark dark:text-dark ml-2">
+                        <li class="dropdown-item">
+                            <a href="purchase-list.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span class="ml-4 text-sm font-medium">Purchase List</span>
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a href="purchase-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span class="ml-4 text-sm font-medium">Create Purchase</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <!-- Purchase Dropdown End -->
 
             </ul>
         </div>

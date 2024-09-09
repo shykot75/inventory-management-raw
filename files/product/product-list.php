@@ -182,7 +182,7 @@ if (isset($_POST['delete'])) {
                             </a>
                         </li>
                         <li class="dropdown-item">
-                            <a href="../product/create-product.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
+                            <a href="../product/product-create.php" class="flex items-center flex-row w-full px-3 py-2.5 ">
                                 <i class="fa-solid fa-chevron-right"></i>
                                 <span class="ml-4 text-sm font-medium">Add Product</span>
                             </a>

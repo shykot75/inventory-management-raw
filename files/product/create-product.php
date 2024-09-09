@@ -111,7 +111,7 @@ if (isset($_POST['submit'])) {
         }
 
         // Redirect after form submission
-        header("Location: create-product.php");
+        header("Location: product-create.php");
         exit();
     } else {
         // Store errors and old inputs in session for display
@@ -267,7 +267,7 @@ if (isset($_POST['submit'])) {
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="create-product.php" method="POST" enctype="multipart/form-data">
+                    <form action="product-create.php" method="POST" enctype="multipart/form-data">
                         <div class="grid xl:grid-cols-3 gap-x-4 my-2">
                             <div>
                                 <label for="product_name" class="form-input-label text-base font-medium required">Product Name</label>
