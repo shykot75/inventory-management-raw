@@ -2,6 +2,14 @@
 include 'config.php';  // Database connection
 session_start();  // Start session to store flash messages
 
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+    // If not logged in, redirect to login page
+    header('Location: dashboard.php');
+    exit();
+}
+
+
 if (isset($_POST['submit'])) {
     // Capture form data
     $name = $_POST['name'];
@@ -120,21 +128,21 @@ if (isset($_POST['submit'])) {
                 <input type="hidden" name="status" value="1">
                 <div class="flex flex-col justify-start items-center w-full">
                     <div class="w-full">
-                        <label for="name" class="form-input-label text-base">Name</label>
+                        <label for="name" class="form-input-label text-base required">Name</label>
                         <div class="relative">
                             <input type="text" name="name" id="name" class="ltr:pl-10 rtl:pr-10 form-input" placeholder="Enter your name"
                                    value="<?php echo isset($_SESSION['old']['name']) ? htmlspecialchars($_SESSION['old']['name']) : ''; ?>">
                         </div>
                     </div>
                     <div class="w-full">
-                        <label for="email" class="form-input-label text-base">Email</label>
+                        <label for="email" class="form-input-label text-base required">Email</label>
                         <div class="relative">
                             <input type="email" name="email" id="username" class="ltr:pl-10 rtl:pr-10 form-input" placeholder="Enter your email"
                                    value="<?php echo isset($_SESSION['old']['email']) ? htmlspecialchars($_SESSION['old']['email']) : ''; ?>">
                         </div>
                     </div>
                     <div class="w-full">
-                        <label for="phone" class="form-input-label text-base">Phone</label>
+                        <label for="phone" class="form-input-label text-base required">Phone</label>
                         <div class="relative">
                             <input type="number" name="phone" id="phone" class="ltr:pl-10 rtl:pr-10 form-input"
                                    min="0" oninput="validity.valid||(value='');" onwheel="this.blur()" placeholder="Enter your phone"
@@ -143,13 +151,13 @@ if (isset($_POST['submit'])) {
                     </div>
 
                     <div class="w-full">
-                        <label for="password" class="form-input-label text-base">Password</label>
+                        <label for="password" class="form-input-label text-base required">Password</label>
                         <div class="relative">
                             <input type="password" name="password" id="password" class="ltr:pl-10 rtl:pr-10 form-input" placeholder="Enter your password">
                         </div>
                     </div>
                     <div class="w-full">
-                        <label for="password_confirmation" class="form-input-label text-base">Confirm Password</label>
+                        <label for="password_confirmation" class="form-input-label text-base required">Confirm Password</label>
                         <div class="relative">
                             <input type="password" name="password_confirmation" id="password_confirmation" class="ltr:pl-10 rtl:pr-10 form-input" placeholder="Re-Enter your password">
                         </div>
