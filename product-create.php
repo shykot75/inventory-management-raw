@@ -32,7 +32,6 @@ $categories = getCategories($connection);  // Fetch categories
 
 // Check if form is submitted
 if (isset($_POST['submit'])) {
-    // Capture form data
     $product_name = $_POST['product_name'];
     $sku = $_POST['sku'];
     $category_id = $_POST['category_id'];

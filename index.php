@@ -1,3 +1,14 @@
+<?php
+session_start();  // Start session to manage login state
+
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+    // If not logged in, redirect to login page
+    header('Location: dashboard.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-mode="light">
 <head>

@@ -11,13 +11,12 @@ if (isset($_SESSION['user_id'])) {
 
 
 if (isset($_POST['submit'])) {
-    // Capture form data
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $password = $_POST['password'];
     $password_confirmation = $_POST['password_confirmation'];
-    $status = (int)$_POST['status'];  // Assuming status is always "1"
+    $status = (int)$_POST['status'] ?? 1;  // Assuming status is always "1"
 
     // Initialize error array
     $errors = [];
@@ -120,7 +119,7 @@ if (isset($_POST['submit'])) {
                 <p class="text-2xl flex items-center w-full px-3 text-primary">Inventory Management System</p>
             </div>
 
-            <!-- Include alert message component (already handling errors) -->
+            <!-- Include alert message component -->
             <?php include 'components/login-alert-message.php'; ?>
 
             <!-- Registration form -->
