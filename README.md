@@ -1,4 +1,4 @@
-# inventory-management-raw
+# Inventory Management System with Raw PHP
 
 ## Environment Setup Requirement
 -----------------------------------
